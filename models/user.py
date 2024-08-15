@@ -9,18 +9,23 @@ from sqlalchemy.orm import relationship
 class User(BaseModel, Base):
     """Representation of a User"""
     __tablename__ = 'users'
-    username = Column(String(60), unique=True, nullable=False)
-    email = Column(String(128), unique=True, nullable=False)
-    password_hash = Column(String(128), nullable=False)
+    email = Column(String(128), nullable=False)
+    password = Column(String(128), nullable=False)
+    first_name = Column(String(128), nullable=True)
+    last_name = Column(String(128), nullable=True)
 
     expenses = relationship('Expense', back_populates='user')
     incomes = relationship('Income', back_populates='user')
     budgets = relationship('Budget', back_populates='user')
 
-    def __init__(self, *args, **kwargs):
-        """Initializes user"""
-        super().__init__(*args, **kwargs)
+    def __setattr__(self, name, value):
+        """ Hash the password """
+        if name == "password":
+            super(User, self).__setattr__(name,
+                                          md5(value.encode()).hexdigest())
+        else:
+            super(User, self).__setattr__(name, value)
 
-    def set_password(self, password):
-        """Hashes password"""
-        self.password_hash = md5(password.encode()).hexdigest()
+    def __init__(self, *args, **kwargs):
+        """initializes user"""
+        super().__init__(*args, **kwargs)
