@@ -1,0 +1,162 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Expense Tracker API",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/api/v1/users": {
+        "get": {
+          "description": "Retrieves the list of all User objects",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "A list of users",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/UserResponse"
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "description": "Creates a User",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "name": "user",
+              "in": "body",
+              "description": "User to create",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/NewUser"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "User created successfully",
+              "schema": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            }
+          }
+        }
+      },
+      "/api/v1/users/{user_id}": {
+        "get": {
+          "description": "Retrieves a user object by user_id",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User object",
+              "schema": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        },
+        "delete": {
+          "description": "Deletes a User object",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User deleted successfully"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        },
+        "put": {
+          "description": "Updates User object",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "user",
+              "in": "body",
+              "description": "User data to update",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UpdateUser"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User updated successfully",
+              "schema": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "email": {"type": "string"},
+          "created_at": {"type": "string"},
+          "updated_at": {"type": "string"},
+          "first_name": {"type": "string"},
+          "last_name": {"type": "string"}
+        }
+      },
+      "NewUser": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {"type": "string"},
+          "password": {"type": "string"},
+          "first_name": {"type": "string"},
+          "last_name": {"type": "string"}
+        }
+      },
+      "UpdateUser": {
+        "type": "object",
+        "properties": {
+          "password": {"type": "string"}
+        }
+      }
+    }
+  }
